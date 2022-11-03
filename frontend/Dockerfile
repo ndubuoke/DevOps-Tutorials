@@ -1,15 +1,8 @@
-FROM node:10 AS build
-
-WORKDIR /app
-
+FROM node:19-alpine3.15
+WORKDIR /frontend
+COPY package*.json ./
+RUN npm install 
 COPY . .
-
-RUN yarn build
-
-FROM nginx:alpine
-
-WORKDIR /usr/share/nginx/html
-
-COPY --from=build /app/build .
-
-CMD ["nginx"]
+RUN npm run build
+EXPOSE 3000
+CMD ["npx", "serve", "build"]
